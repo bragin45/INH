@@ -1,12 +1,10 @@
 package ru.netology.manager;
 
-import ru.netology.product.Book;
-import ru.netology.product.Product;
-import ru.netology.product.Smartphone;
-import ru.netology.repository.Repository;
-
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import ru.netology.repository.Repository;
+import ru.netology.product.Book;
+import ru.netology.product.Smartphone;
+import ru.netology.product.Product;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -26,50 +24,68 @@ class ManagerTest {
     Product product9 = new Smartphone(9, "Y31 4/64GB", 15999, "Vivo");
     Product product10 = new Smartphone(10, "Blade L210 1/32GB", 5983, "ZTE");
 
-    @BeforeEach
-    void setup() {
+    @Test
+    public void shouldSaveOneBook() {
+        repository.save(product1);
+
+        Product[] expected = new Product[]{product1};
+        Product[] actual = repository.findAll();
+        assertArrayEquals(expected, actual);
+    }
+
+    @Test
+    public void shouldSaveOneSmartphone() {
+        repository.save(product6);
+
+        Product[] expected = new Product[]{product6};
+        Product[] actual = repository.findAll();
+        assertArrayEquals(expected, actual);
+    }
+
+    @Test
+    public void shouldRemoveBookById() {
+        repository.save(product1);
+        repository.removeById(1);
+
+        Product[] expected = new Product[]{};
+        Product[] actual = repository.findAll();
+        assertArrayEquals(expected, actual);
+    }
+
+    @Test
+    public void removeSmartphoneById() {
+        repository.save(product6);
+
+        repository.removeById(6);
+
+        Product[] expected = new Product[]{};
+        Product[] actual = repository.findAll();
+        assertArrayEquals(expected, actual);
+    }
+
+    @Test
+    public void shouldAddOneBookWithManager() {
         manager.add(product1);
-        manager.add(product2);
-        manager.add(product3);
-        manager.add(product4);
-        manager.add(product5);
+        Product[] expected = {product1};
+        Product[] actual = repository.findAll();
+        assertArrayEquals(expected, actual);
+    }
+
+    @Test
+    public void shouldAddOneSmartphoneWithManager() {
         manager.add(product6);
+        Product[] expected = {product6};
+        Product[] actual = repository.findAll();
+        assertArrayEquals(expected, actual);
+    }
+
+    @Test
+    public void shouldSearchByProductName() {
+        manager.add(product1);
         manager.add(product7);
-        manager.add(product8);
-        manager.add(product9);
-        manager.add(product10);
-    }
-
-    @Test
-    void shouldSearchByBookName(){
-        Product[]actual = manager.searchBy("Куда приводят мечты");
-        Product[]excepted = {new Book(2, "Куда приводят мечты", 166, "Матесон Ричард")};
-
-        assertArrayEquals(excepted, actual);
-    }
-
-    @Test
-    void shouldSearchByBookAuthor(){
-        Product[]actual =manager.searchBy("Оруэлл Джордж");
-        Product[]excepted = {new Book(1, "1984", 390, "Оруэлл Джордж")};
-
-        assertArrayEquals(excepted, actual);
-    }
-
-    @Test
-    void shouldSearchBySmartphoneName(){
-        Product[]actual = manager.searchBy("6051G Soul 1/16GB");
-        Product[]expected = {new Smartphone(7, "6051G Soul 1/16GB", 4980,"BQ")};
-
-        assertArrayEquals(expected,actual);
-    }
-
-    @Test
-    void shouldSearchBySmartphoneManufacturer(){
-        Product[]actual = manager.searchBy("Vivo");
-        Product[]expected = {new Smartphone(9,"Y31 4/64GB", 15999,"Vivo")};
-
-        assertArrayEquals(expected,actual);
+        Product[] actual = manager.searchBy("1984");
+        Product[] expected = {product1};
+        assertArrayEquals(expected, actual);
     }
 
 }
